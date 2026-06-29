@@ -51,14 +51,16 @@
     <div id="ratio" class="info-box"></div>
     <div class="section">
         <h2>1. A등급 달성 커트라인 계산</h2>
-        <label id="lbl1">중간고사 점수 :</label><input type="number" id="sc1" min="0" max="100" placeholder="점수를 입력하세요">
+        <!-- 💡 엔터 감지용 onkeydown 속성 추가 -->
+        <label id="lbl1">중간고사 점수 :</label><input type="number" id="sc1" min="0" max="100" placeholder="점수를 입력하세요" onkeydown="if(event.key==='Enter')cal1()">
         <button onclick="cal1()">필요한 최소 점수 계산</button>
         <div id="res1" class="res">결과가 여기에 표시됩니다.</div>
     </div>
     <div class="section">
         <h2>2. 최종 성적 계산기</h2>
-        <label id="lbl2">중간고사 점수 :</label><input type="number" id="sc2" min="0" max="100">
-        <label id="lbl3">수행평가 점수 :</label><input type="number" id="sc3" min="0" max="100">
+        <!-- 💡 엔터 감지용 onkeydown 속성 추가 -->
+        <label id="lbl2">중간고사 점수 :</label><input type="number" id="sc2" min="0" max="100" onkeydown="if(event.key==='Enter')cal2()">
+        <label id="lbl3">수행평가 점수 :</label><input type="number" id="sc3" min="0" max="100" onkeydown="if(event.key==='Enter')cal2()">
         <button onclick="cal2()">최종 원점수 확인</button>
         <div id="res2" class="res">결과가 여기에 표시됩니다.</div>
     </div>
