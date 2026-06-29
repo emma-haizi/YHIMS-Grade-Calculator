@@ -51,32 +51,32 @@
     <div id="ratio" class="info-box"></div>
     <div class="section">
         <h2>1. A등급 달성 커트라인 계산</h2>
-        <!-- 💡 엔터 감지용 onkeydown 속성 추가 -->
-        <label id="lbl1">중간고사 점수 :</label><input type="number" id="sc1" min="0" max="100" placeholder="점수를 입력하세요" onkeydown="if(event.key==='Enter')cal1()">
+        <label id="lbl1">중간고사 점수 :</label><input type="number" id="sc1" min="0" max="100" placeholder="점수를 입력하세요">
         <button onclick="cal1()">필요한 최소 점수 계산</button>
         <div id="res1" class="res">결과가 여기에 표시됩니다.</div>
     </div>
     <div class="section">
         <h2>2. 최종 성적 계산기</h2>
-        <!-- 💡 엔터 감지용 onkeydown 속성 추가 -->
-        <label id="lbl2">중간고사 점수 :</label><input type="number" id="sc2" min="0" max="100" onkeydown="if(event.key==='Enter')cal2()">
-        <label id="lbl3">수행평가 점수 :</label><input type="number" id="sc3" min="0" max="100" onkeydown="if(event.key==='Enter')cal2()">
+        <label id="lbl2">중간고사 점수 :</label><input type="number" id="sc2" min="0" max="100">
+        <label id="lbl3">수행평가 점수 :</label><input type="number" id="sc3" min="0" max="100">
         <button onclick="cal2()">최종 원점수 확인</button>
         <div id="res2" class="res">결과가 여기에 표시됩니다.</div>
     </div>
 </div>
 <script>
+    // 💡 [구간 재정렬] 90~92, 93~96, 97~100 구간별 성적표 스타일 안내 멘트
     const aMsg = {
-        90: "정확하게 커트라인을 통과하여 A등급을 쟁취하셨습니다! 대단해요!",
-        91: "끈기 있게 노력한 결실이 구체적인 A등급으로 나타났군요. 축하합니다!",
-        92: "안정적인 점수로 A등급 합격권에 진입하셨습니다. 정말 멋집니다!",
-        93: "탄탄한 실력으로 우수한 성적의 A등급을 받아내셨네요. 고생하셨습니다!",
-        94: "상위권을 향한 열정이 빛을 발했습니다. 기분 좋은 A등급 축하드려요!",
-        95: "우수한 원점수로 고득점 A등급을 달성하셨습니다! 자랑스러워해도 좋습니다!",
-        96: "문제를 거의 틀리지 않고 최상위권 A등급을 마크하셨네요. 엄청납니다!",
-        97: "완벽에 가까운 실력으로 압도적인 A등급을 거머쥐셨습니다. 대단한 집중력이에요!",
-        98: "단 한 걸음만 남겨둔 놀라운 초고득점 A등급입니다! 최고의 성과예요!",
-        99: "아쉽게 100점은 놓쳤지만, 실질적인 탑클래스 완벽한 A등급입니다! 정말 훌륭해요!"
+        90: "성적 기준을 충족하여 A등급을 획득했습니다.",
+        91: "성적 기준을 충족하여 A등급을 획득했습니다.",
+        92: "성적 기준을 충족하여 A등급을 획득했습니다.",
+        93: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        94: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        95: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        96: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        97: "최상위권 성적으로 A등급 기준을 만족했습니다.",
+        98: "최상위권 성적으로 A등급 기준을 만족했습니다.",
+        99: "최상위권 성적으로 A등급 기준을 만족했습니다.",
+        100: "최상위권 성적으로 A등급 기준을 만족했습니다."
     };
     function getConf() {
         const s = document.getElementById("sem").value, k = document.getElementById("sub").value;
@@ -104,26 +104,31 @@
     }
     function cal1() {
         const c = getConf(), v = parseFloat(document.getElementById("sc1").value), r = document.getElementById("res1");
-        if(isNaN(v) || v<0 || v>100) { r.className = "res error-msg"; r.innerText = "⚠️ 0부터 100 사이의 정확한 점수를 입력해 주세요."; return; }
+        if(isNaN(v) || v<0 || v>100) { r.className = "res error-msg"; r.innerText = "⚠️ 0~100 사이의 정확한 점수를 입력해 주세요."; return; }
         r.className = "res blue-highlight";
         let need = c.t === "중간" ? (89.5 - (v * (c.e / 100))) / (c.p / 100) : (89.5 - (v * (c.p / 100))) / (c.e / 100);
         let target = c.t === "중간" ? "수행평가" : "기말고사";
-        if (need <= 0) r.innerHTML = `이미 A등급 달성 완료! (${target} 점수 제한 없음)`;
-        else if (need > 100) r.innerHTML = `이번 점수로는 ${target}에서 100점을 받아도 A등급 달성이 불가능합니다. (필요: ${need.toFixed(1)}점)`;
-        else r.innerHTML = `🎯 A등급을 받기 위해 필요한 최소 ${target} 점수는 [ ${need.toFixed(1)}점 ] 입니다.`;
+        if (need <= 0) r.innerHTML = `이미 A등급 커트라인을 달성했습니다! (남은 시험 0점 기준)`;
+        else if (need > 100) r.innerHTML = `이 점수로는 다음 시험에서 100점을 획득하여도 A등급 달성이 불가능합니다.`;
+        else r.innerHTML = `🎯 A등급을 받기 위해 필요한 최소 ${target} 점수는 ${need.toFixed(1)}점입니다.`;
     }
     function cal2() {
         const c = getConf(), e = parseFloat(document.getElementById("sc2").value), p = parseFloat(document.getElementById("sc3").value), r = document.getElementById("res2");
-        if(isNaN(e) || isNaN(p) || e<0 || e>100 || p<0 || p>100) { r.className = "res error-msg"; r.innerText = "⚠️ 고사 점수 및 수행평가 점수를 모두 정확하게 입력해 주세요."; return; }
+        if(isNaN(e) || isNaN(p) || e<0 || e>100 || p<0 || p>100) { r.className = "res error-msg"; r.innerText = "⚠️ 중간(기말)고사 및 수행평가 점수를 모두 정확하게 입력해 주세요."; return; }
         const raw = (e * (c.e/100)) + (p * (c.p/100)), rnd = Math.round(raw);
         let g = 'F'; r.className = "res";
         if(raw>=89.5) g='A'; else if(raw>=79.5) g='B'; else if(raw>=69.5) g='C'; else if(raw>=59.5) g='D'; else if(raw>=49.5) g='E';
         let txt = `원점수: <strong>${rnd}점</strong> (${raw.toFixed(1)}점) / 등급: <strong>${g}등급</strong><br>`;
-        if (rnd === 100) { r.className = "res gold"; txt = `👑 완벽합니다! 100점 만점으로 A등급 달성을 진심으로 축하합니다! 👑<br>원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}`; }
+        
+        // 💡 [구간 맵핑 최적화] 100점일 땐 화려한 금색 박스 연출, 텍스트는 97~100 최상위권용 멘트 정렬
+        if (rnd === 100) { r.className = "res gold"; txt = `👑 100점 만점으로 A등급 기준을 만족했습니다! 정말 축하합니다! 👑<br>원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}`; }
         else if (g === 'A') { r.className = "res green-vip"; txt = `원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}등급<br>🎉 ${aMsg[rnd]} 🎉`; }
-        else { r.className = "res red-alert"; txt += g === 'B' ? "조금만 더 노력하면 A등급도 노려볼 수 있어요! 파이팅!" : "다음 학기에는 더 좋은 결과가 있을 거예요. 응원합니다!"; }
+        else { r.className = "res red-alert"; txt += g === 'B' ? "조금만 더 노력하면 A등급도 노려볼 수 있어요! 파이팅!" : "이번 학기 고생 많으셨습니다! 다음 학기에도 좋은 결과가 있기를 응원합니다."; }
         r.innerHTML = txt;
     }
+    document.getElementById("sc1").addEventListener("keydown", function(e) { if(e.key === "Enter") cal1(); });
+    document.getElementById("sc2").addEventListener("keydown", function(e) { if(e.key === "Enter") cal2(); });
+    document.getElementById("sc3").addEventListener("keydown", function(e) { if(e.key === "Enter") cal2(); });
     up();
 </script>
 </body>
