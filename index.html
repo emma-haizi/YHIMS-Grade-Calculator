@@ -1,5 +1,5 @@
 <!-- 
-  Copyright (c) 2026 김아윤 (@emma_haizi) All rights reserved.
+  Copyright (c) 2026 김아윤 All rights reserved.
   본 프로그램의 저작권 및 디자인 권한은 최초 제작자 '김아윤'에게 있습니다.
   MIT License에 따라 배포 시 이 저작권 고지를 무단 삭제할 수 없습니다.
 -->
@@ -39,7 +39,8 @@
 <div class="box">
     <div class="title-area">
         <h1>YHIMS Grade Calculator</h1>
-        <div class="author">제작 : 김아윤 / @emma_haizi</div>
+        <!-- 💡 개인 아이디를 지우고 깔끔하게 단독 성명만 남겨두었습니다 -->
+        <div class="author">제작 : 김아윤</div>
     </div>
     <div class="select-row">
         <select id="sem" onchange="up()"><option value="1">1학기</option><option value="2">2학기</option></select>
@@ -64,19 +65,18 @@
     </div>
 </div>
 <script>
-    // 💡 [구간 재정렬] 90~92, 93~96, 97~100 구간별 성적표 스타일 안내 멘트
     const aMsg = {
-        90: "성적 기준을 충족하여 A등급을 획득했습니다.",
-        91: "성적 기준을 충족하여 A등급을 획득했습니다.",
-        92: "성적 기준을 충족하여 A등급을 획득했습니다.",
-        93: "우수한 성적으로 A등급 기준을 충족했습니다.",
-        94: "우수한 성적으로 A등급 기준을 충족했습니다.",
-        95: "우수한 성적으로 A등급 기준을 충족했습니다.",
-        96: "우수한 성적으로 A등급 기준을 충족했습니다.",
-        97: "최상위권 성적으로 A등급 기준을 만족했습니다.",
-        98: "최상위권 성적으로 A등급 기준을 만족했습니다.",
+        100: "최상위권 성적으로 A등급 기준을 만족했습니다.",
         99: "최상위권 성적으로 A등급 기준을 만족했습니다.",
-        100: "최상위권 성적으로 A등급 기준을 만족했습니다."
+        98: "최상위권 성적으로 A등급 기준을 만족했습니다.",
+        97: "최상위권 성적으로 A등급 기준을 만족했습니다.",
+        96: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        95: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        94: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        93: "우수한 성적으로 A등급 기준을 충족했습니다.",
+        92: "성적 기준을 충족하여 A등급을 획득했습니다.",
+        91: "성적 기준을 충족하여 A등급을 획득했습니다.",
+        90: "성적 기준을 충족하여 A등급을 획득했습니다."
     };
     function getConf() {
         const s = document.getElementById("sem").value, k = document.getElementById("sub").value;
@@ -119,9 +119,7 @@
         let g = 'F'; r.className = "res";
         if(raw>=89.5) g='A'; else if(raw>=79.5) g='B'; else if(raw>=69.5) g='C'; else if(raw>=59.5) g='D'; else if(raw>=49.5) g='E';
         let txt = `원점수: <strong>${rnd}점</strong> (${raw.toFixed(1)}점) / 등급: <strong>${g}등급</strong><br>`;
-        
-        // 💡 [구간 맵핑 최적화] 100점일 땐 화려한 금색 박스 연출, 텍스트는 97~100 최상위권용 멘트 정렬
-        if (rnd === 100) { r.className = "res gold"; txt = `👑 100점 만점으로 A등급 기준을 만족했습니다! 정말 축하합니다! 👑<br>원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}`; }
+        if (rnd === 100) { r.className = "res gold"; txt = `👑 100점 만점으로 A등급 기준을 만족했습니다! 👑<br>원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}`; }
         else if (g === 'A') { r.className = "res green-vip"; txt = `원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}등급<br>🎉 ${aMsg[rnd]} 🎉`; }
         else { r.className = "res red-alert"; txt += g === 'B' ? "조금만 더 노력하면 A등급도 노려볼 수 있어요! 파이팅!" : "이번 학기 고생 많으셨습니다! 다음 학기에도 좋은 결과가 있기를 응원합니다."; }
         r.innerHTML = txt;
