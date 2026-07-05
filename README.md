@@ -10,7 +10,6 @@
 * **[Added]** 
 * **[Added]**
 <details>
-  <summary>🔍 여기에 클릭할 문구를 입력하세요 (예: 사진 보기)</summary>
-  <!-- 클릭하면 나타날 사진 코드를 아래에 넣습니다 -->
+  <summary>🔍 v.0.1.0 사진</summary>
   <img src="https://github.com/emma-haizi/YHIMS-Grade-Calculator/blob/main/images/v0.1.0.png?raw=true" width="500">
 </details>
