@@ -1,1 +1,1 @@
-# YHIMS-Grade-Calculator
+# Grade-Calculator
