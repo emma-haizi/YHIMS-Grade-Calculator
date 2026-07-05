@@ -9,4 +9,8 @@
 ### [v.0.1.0] - 2026.06.29
 * **[Added]** 
 * **[Added]**
-![v.0.1.0 이미지](https://github.com/emma-haizi/YHIMS-Grade-Calculator/blob/7a7b5f4ecd8a997434d7f75a9e3194884526a7d7/images/v0.1.0.png)
+<details>
+  <summary>🔍 여기에 클릭할 문구를 입력하세요 (예: 사진 보기)</summary>
+  <!-- 클릭하면 나타날 사진 코드를 아래에 넣습니다 -->
+  <img src="https://github.com/emma-haizi/YHIMS-Grade-Calculator/blob/main/images/v0.1.0.png?raw=true" width="500">
+</details>
