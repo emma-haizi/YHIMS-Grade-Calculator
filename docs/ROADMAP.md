@@ -1,7 +1,7 @@
 # ROADMAP
 
 ### [v0.2.0] - 업데이트 예정
-Theme : 🌍 Universal Grade Calculator
+🎯 Theme : 🌍 Universal Grade Calculator
 
 #### **✨ Added** 
 - [ ]Custom Grade Calculator 추가
@@ -20,7 +20,7 @@ Theme : 🌍 Universal Grade Calculator
 </details>
 
 ### [v0.3.0] - 업데이트 예정
-Theme : ✨ Better User Experience
+🎯 Theme : ✨ Better User Experience
 
 #### **✨ Added**
 - [ ]계산 결과 자동 저장
@@ -42,7 +42,7 @@ Theme : ✨ Better User Experience
 </details>
 
 ### [v0.4.0] - 업데이트 예정
-Theme : 📊 Grade Analysis
+🎯 Theme : 📊 Grade Analysis
 
 #### **✨ Added**
 - [ ]A/B/C 등급별 커트라인 계산 지원
@@ -59,7 +59,7 @@ Theme : 📊 Grade Analysis
 </details>
 
 ### [v0.5.0] - 업데이트 예정
-Theme : 🎨 Personalization
+🎯 Theme : 🎨 Personalization
 
 #### **✨ Added**
 - [ ]사용자 정의 반영 비율 프리셋 저장 기능
@@ -77,7 +77,7 @@ Theme : 🎨 Personalization
 </details>
 
 ### [v1.0.0] - 🎉 정식 배포
-Theme : 🚀 Official Release
+🎯 Theme : 🚀 Official Release
 
 #### **✨ Added**
 - [ ]모든 핵심 기능 정식 지원
