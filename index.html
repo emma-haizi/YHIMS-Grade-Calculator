@@ -129,19 +129,33 @@
     document.getElementById("sc3").addEventListener("keydown", function(e) { if(e.key === "Enter") cal2(); });
     up();
 </script>
-  <!-- 튜토리얼 팝업 (웹/앱 공용) -->
-<div id="tutorialModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 9999;">
-  <div style="background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-family: sans-serif;">
-    <h3 style="margin-top: 0; color: #333;">👋 YHIMS 성적 계산기 도움말</h3>
-    <p style="font-size: 14px; color: #666; line-height: 1.5;">앱을 처음 켜신 분들을 위한 간단한 가이드입니다.</p>
+<!-- 튜토리얼 팝업 (테스트를 위해 처음에는 무조건 보이도록 display: flex 설정) -->
+<div id="tutorialModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 9999; font-family: sans-serif;">
+  <div style="background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;">
     
-    <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; font-size: 13px; text-align: left; margin: 15px 0;">
-      <p style="margin: 5px 0;"><strong>1. 커트라인 계산:</strong> 중간고사 점수를 입력하면, A등급을 받기 위해 필요한 기말고사 최소 점수를 계산합니다.</p>
-      <p style="margin: 10px 0 5px 0;"><strong>2. 최종 성적 확인:</strong> 수행평가와 시험 점수를 모두 반영한 최종 원점수를 미리 예측합니다.</p>
+    <!-- 타이틀 로고 느낌 안내 -->
+    <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
+    <h3 style="margin: 0 0 8px 0; color: #222; font-size: 20px; font-weight: bold;">YHIMS 성적 계산기</h3>
+    <p style="margin: 0 0 20px 0; color: #888; font-size: 13px;">제작 : 16기 김아윤</p>
+    
+    <!-- 도움말 본문 -->
+    <div style="background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px;">
+      <div style="margin-bottom: 12px;">
+        <span style="background: #e6f2ff; color: #007bff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">기능 1</span>
+        <strong style="font-size: 14px; color: #333;">A등급 커트라인 계산</strong>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">중간고사 점수를 넣으면 A등급 달성에 필요한 최소 기말고사 점수를 미리 알려줍니다.</p>
+      </div>
+      
+      <div>
+        <span style="background: #e6f2ff; color: #007bff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">기능 2</span>
+        <strong style="font-size: 14px; color: #333;">최종 성적 계산기</strong>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">중간고사와 수행평가 점수를 조합하여 최종 원점수를 모의 계산합니다.</p>
+      </div>
     </div>
 
-    <button id="closeTutorialBtn" style="background: #007bff; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
-      확인 (다시 보지 않기)
+    <!-- 닫기 버튼 -->
+    <button id="closeTutorialBtn" style="background: #007bff; color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: background 0.2s;">
+      확인했습니다 (다시 보지 않기)
     </button>
   </div>
 </div>
@@ -151,21 +165,22 @@ document.addEventListener("DOMContentLoaded", function() {
   const modal = document.getElementById("tutorialModal");
   const btn = document.getElementById("closeTutorialBtn");
 
-  // LocalStorage에서 방문 기록 확인
-  const isVisited = localStorage.getItem("yhims_first_launch");
+  // 1. 저장소에서 이전에 방문한 적이 있는지 꺼내봅니다.
+  const isVisited = localStorage.getItem("yhims_tutorial_seen");
 
-  // 첫 방문일 때만 팝업 표시
-  if (!isVisited) {
-    modal.style.display = "flex";
+  // 2. 만약 방문한 적이 있다면 팝업창을 즉시 없앱니다.
+  if (isVisited === "true") {
+    modal.style.display = "none";
   }
 
-  // 버튼 클릭 시 팝업을 닫고 방문 기록 저장
+  // 3. 버튼을 누르면 팝업창을 닫고, 저장소에 기록을 남깁니다.
   btn.addEventListener("click", function() {
     modal.style.display = "none";
-    localStorage.setItem("yhims_first_launch", "true");
+    localStorage.setItem("yhims_tutorial_seen", "true");
   });
 });
 </script>
+
 
 </body>
 </html>
