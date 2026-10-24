@@ -17,11 +17,17 @@
         h1 { margin: 0; font-size: 32px; color: #1e293b; letter-spacing: -0.5px; }
         .author { font-size: 14px; color: #64748b; margin-top: 8px; font-weight: 500; }
         .select-row { display: flex; gap: 15px; }
+        .select-row > div { flex: 1; }
         @media (max-width: 480px) { .select-row { flex-direction: column; gap: 0; } }
         select, input, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; font-size: 18px; box-sizing: border-box; transition: all 0.2s ease; }
         select, input { border: 1px solid #cbd5e1; background: #fff; color: #334155; }
         button { background: #b9d9eb; color: #0f2d4a; border: none; font-weight: bold; cursor: pointer; }
         button:hover { background: #a2cce4; transform: translateY(-1px); }
+        .tabs { display: flex; gap: 10px; margin-bottom: 18px; }
+        .tabs button { margin: 0; background: #e2e8f0; color: #475569; font-size: 16px; }
+        .tabs button.on { background: #b9d9eb; color: #0f2d4a; }
+        .hide { display: none !important; }
+        label { font-size: 16px; color: #475569; }
         .info-box { background: #f1f5f9; color: #334155; padding: 18px; font-weight: bold; border-radius: 10px; margin: 20px 0; text-align: center; font-size: 19px; border: 1px solid #e2e8f0; }
         .section { border-top: 1px solid #e2e8f0; padding: 25px 0; margin-top: 25px; }
         h2 { font-size: 22px; color: #334155; margin-top: 0; }
@@ -42,29 +48,62 @@
         <h1>YHIMS Grade Calculator</h1>
         <div class="author">제작 : YHIMS 16기 김아윤</div>
     </div>
-    <div class="select-row">
+
+    <!-- 모드 선택 -->
+    <div class="tabs">
+        <button id="tabCustom" class="on" onclick="setMode('custom')">직접 입력</button>
+        <button id="tabPreset" onclick="setMode('preset')">3학년 프리셋</button>
+    </div>
+
+    <!-- 직접 입력 모드 -->
+    <div id="customBox">
+        <label for="ct">시험 종류</label>
+        <select id="ct" onchange="up()">
+            <option value="중간">중간고사</option>
+            <option value="기말" selected>기말고사</option>
+        </select>
+        <div class="select-row">
+            <div><label for="ce">지필고사 비율 (%)</label><input type="number" id="ce" min="0" max="100" value="30" oninput="syncR('ce')"></div>
+            <div><label for="cp">수행평가 비율 (%)</label><input type="number" id="cp" min="0" max="100" value="70" oninput="syncR('cp')"></div>
+        </div>
+        <label for="cg">목표 등급</label>
+        <select id="cg" onchange="up()">
+            <option value="89.5" selected>A등급 (89.5점 이상)</option>
+            <option value="79.5">B등급 (79.5점 이상)</option>
+            <option value="69.5">C등급 (69.5점 이상)</option>
+            <option value="59.5">D등급 (59.5점 이상)</option>
+            <option value="0">E등급 (59.5점 미만)</option>
+        </select>
+    </div>
+
+    <!-- 3학년 프리셋 모드 -->
+    <div id="presetBox" class="select-row hide">
         <select id="sem" onchange="up()"><option value="1">1학기</option><option value="2">2학기</option></select>
         <select id="sub" onchange="up()">
             <option value="국어">국어</option><option value="수학">수학</option><option value="사회역사">사회/역사</option>
             <option value="과학">과학</option><option value="영어">영어</option><option value="제2외국어">제 2외국어</option><option value="기술가정">기술가정</option>
         </select>
     </div>
+
     <div id="ratio" class="info-box"></div>
     <div class="section">
-        <h2>1. A등급 달성 커트라인 계산</h2>
-        <label id="lbl1">중간고사 점수 :</label><input type="number" id="sc1" min="0" max="100" placeholder="점수를 입력하세요">
+        <h2 id="h1t">1. 목표 등급 커트라인 계산</h2>
+        <label id="lbl1">수행평가 점수 :</label><input type="number" id="sc1" min="0" max="100" placeholder="점수를 입력하세요">
         <button onclick="cal1()">필요한 최소 점수 계산</button>
         <div id="res1" class="res">결과가 여기에 표시됩니다.</div>
     </div>
     <div class="section">
         <h2>2. 최종 성적 계산기</h2>
-        <label id="lbl2">중간고사 점수 :</label><input type="number" id="sc2" min="0" max="100">
+        <label id="lbl2">기말고사 점수 :</label><input type="number" id="sc2" min="0" max="100">
         <label id="lbl3">수행평가 점수 :</label><input type="number" id="sc3" min="0" max="100">
         <button onclick="cal2()">최종 원점수 확인</button>
         <div id="res2" class="res">결과가 여기에 표시됩니다.</div>
     </div>
 </div>
+
 <script>
+    const $ = id => document.getElementById(id);
+    let mode = "custom";
     const aMsg = {
         100: "최상위권 성적으로 A등급 기준을 만족했습니다.",
         99: "최상위권 성적으로 A등급 기준을 만족했습니다.",
@@ -78,96 +117,142 @@
         91: "성적 기준을 충족하여 A등급을 획득했습니다.",
         90: "성적 기준을 충족하여 A등급을 획득했습니다."
     };
+
+    function setMode(m) {
+        mode = m;
+        $("tabCustom").className = m === "custom" ? "on" : "";
+        $("tabPreset").className = m === "preset" ? "on" : "";
+        $("customBox").classList.toggle("hide", m !== "custom");
+        $("presetBox").classList.toggle("hide", m !== "preset");
+        up();
+    }
+
+    // 한쪽 비율을 입력하면 나머지가 자동으로 채워짐
+    function syncR(from) {
+        const v = parseFloat($(from).value);
+        const other = from === "ce" ? "cp" : "ce";
+        if (isNaN(v)) { $(other).value = ""; }
+        else { const c = Math.min(100, Math.max(0, v)); $(other).value = Math.round((100 - c) * 100) / 100; }
+        up(true);
+    }
+
+    // known: 이미 알고 있는 점수 종류 ("exam" = 지필, "perf" = 수행평가)
     function getConf() {
-        const s = document.getElementById("sem").value, k = document.getElementById("sub").value;
+        if (mode === "custom") {
+            const g = $("cg"), opt = g.options[g.selectedIndex];
+            return { t: $("ct").value, e: parseFloat($("ce").value), p: parseFloat($("cp").value),
+                     n: "직접 입력", known: "perf", cut: parseFloat(g.value), gr: opt.text.charAt(0), custom: true };
+        }
+        const s = $("sem").value, k = $("sub").value;
         let t = "중간", e = 30, p = 70;
         if (k === "과학") { e = 20; p = 80; }
         if (s === "2" || ["사회역사", "영어", "제2외국어", "기술가정"].includes(k)) { t = "기말"; }
-        return { t: t, e: e, p: p, n: document.getElementById("sub").options[document.getElementById("sub").selectedIndex].text };
+        return { t: t, e: e, p: p, n: $("sub").options[$("sub").selectedIndex].text,
+                 known: t === "중간" ? "exam" : "perf", cut: 89.5, gr: "A", custom: false };
     }
-    function up() {
+
+    function ratioOk(c) {
+        return !isNaN(c.e) && !isNaN(c.p) && c.e >= 0 && c.p >= 0 && Math.abs(c.e + c.p - 100) < 0.001;
+    }
+
+    function up(keepScores) {
         const c = getConf();
-        document.getElementById("ratio").innerText = `[${document.getElementById("sem").value}학기] ${c.n} 과목은 [${c.t}고사 ${c.e}%, 수행평가 ${c.p}%]로 산출됨`;
-        if (c.t === "중간") {
-            document.getElementById("lbl1").innerText = "중간고사 점수 :";
-            document.getElementById("sc1").placeholder = "중간고사 점수를 입력하세요";
-            document.getElementById("lbl2").innerText = "중간고사 점수 :";
+        if (c.custom) {
+            $("ratio").innerText = ratioOk(c)
+                ? `[직접 입력] [${c.t}고사 ${c.e}%, 수행평가 ${c.p}%]로 산출됨 (목표: ${c.gr}등급)`
+                : "[직접 입력] 지필고사 또는 수행평가 비율을 입력해 주세요.";
         } else {
-            document.getElementById("lbl1").innerText = "수행평가 점수 :";
-            document.getElementById("sc1").placeholder = "수행평가 점수를 입력하세요";
-            document.getElementById("lbl2").innerText = "기말고사 점수 :";
+            $("ratio").innerText = `[${$("sem").value}학기] ${c.n} 과목은 [${c.t}고사 ${c.e}%, 수행평가 ${c.p}%]로 산출됨`;
         }
-        document.getElementById("lbl3").innerText = "수행평가 점수 :";
-        document.getElementById("res1").className = "res"; document.getElementById("res1").innerText = "결과가 여기에 표시됩니다.";
-        document.getElementById("res2").className = "res"; document.getElementById("res2").innerText = "결과가 여기에 표시됩니다.";
-        document.getElementById("sc1").value = ""; document.getElementById("sc2").value = ""; document.getElementById("sc3").value = "";
+        const l1 = c.known === "exam" ? c.t + "고사" : "수행평가";
+        $("h1t").innerText = `1. ${c.gr}등급 달성 커트라인 계산`;
+        $("lbl1").innerText = l1 + " 점수 :";
+        $("sc1").placeholder = l1 + " 점수를 입력하세요";
+        $("lbl2").innerText = c.t + "고사 점수 :";
+        $("lbl3").innerText = "수행평가 점수 :";
+        $("res1").className = "res"; $("res1").innerText = "결과가 여기에 표시됩니다.";
+        $("res2").className = "res"; $("res2").innerText = "결과가 여기에 표시됩니다.";
+        if (!keepScores) { $("sc1").value = ""; $("sc2").value = ""; $("sc3").value = ""; }
     }
+
     function cal1() {
-        const c = getConf(), v = parseFloat(document.getElementById("sc1").value), r = document.getElementById("res1");
-        if(isNaN(v) || v<0 || v>100) { r.className = "res error-msg"; r.innerText = "⚠️ 0~100 사이의 정확한 점수를 입력해 주세요."; return; }
+        const c = getConf(), v = parseFloat($("sc1").value), r = $("res1");
+        if (!ratioOk(c)) { r.className = "res error-msg"; r.innerText = "⚠️ 지필고사와 수행평가 비율을 먼저 입력해 주세요. (합계 100%)"; return; }
+        if (isNaN(v) || v < 0 || v > 100) { r.className = "res error-msg"; r.innerText = "⚠️ 0~100 사이의 정확한 점수를 입력해 주세요."; return; }
+        const known = c.known === "exam" ? c.e : c.p, unknown = c.known === "exam" ? c.p : c.e;
+        const target = c.known === "exam" ? "수행평가" : c.t + "고사";
         r.className = "res blue-highlight";
-        let need = c.t === "중간" ? (89.5 - (v * (c.e / 100))) / (c.p / 100) : (89.5 - (v * (c.p / 100))) / (c.e / 100);
-        let target = c.t === "중간" ? "수행평가" : "기말고사";
-        if (need <= 0) r.innerHTML = `이미 A등급 커트라인을 달성했습니다! (남은 시험 0점 기준)`;
-        else if (need > 100) r.innerHTML = `이 점수로는 다음 시험에서 100점을 획득하여도 A등급 달성이 불가능합니다.`;
-        else r.innerHTML = `🎯 A등급을 받기 위해 필요한 최소 ${target} 점수는 ${need.toFixed(1)}점입니다.`;
+        if (unknown === 0) {
+            r.innerHTML = (v * known / 100 >= c.cut) ? `이미 ${c.gr}등급 커트라인을 달성했습니다!` : `${target} 비율이 0%라서 계산할 수 없습니다. 비율을 확인해 주세요.`;
+            return;
+        }
+        const need = (c.cut - v * (known / 100)) / (unknown / 100);
+        if (need <= 0) r.innerHTML = `이미 ${c.gr}등급 커트라인을 달성했습니다! (남은 시험 0점 기준)`;
+        else if (need > 100) r.innerHTML = `이 점수로는 ${target}에서 100점을 획득하여도 ${c.gr}등급 달성이 불가능합니다.`;
+        else r.innerHTML = `🎯 ${c.gr}등급을 받기 위해 필요한 최소 ${target} 점수는 ${need.toFixed(1)}점입니다.`;
     }
+
     function cal2() {
-        const c = getConf(), e = parseFloat(document.getElementById("sc2").value), p = parseFloat(document.getElementById("sc3").value), r = document.getElementById("res2");
-        if(isNaN(e) || isNaN(p) || e<0 || e>100 || p<0 || p>100) { r.className = "res error-msg"; r.innerText = "⚠️ 중간(기말)고사 및 수행평가 점수를 모두 정확하게 입력해 주세요."; return; }
-        const raw = (e * (c.e/100)) + (p * (c.p/100)), rnd = Math.round(raw);
-        let g = 'F'; r.className = "res";
-        if(raw>=89.5) g='A'; else if(raw>=79.5) g='B'; else if(raw>=69.5) g='C'; else if(raw>=59.5) g='D'; else if(raw>=49.5) g='E';
+        const c = getConf(), e = parseFloat($("sc2").value), p = parseFloat($("sc3").value), r = $("res2");
+        if (!ratioOk(c)) { r.className = "res error-msg"; r.innerText = "⚠️ 지필고사와 수행평가 비율을 먼저 입력해 주세요. (합계 100%)"; return; }
+        if (isNaN(e) || isNaN(p) || e < 0 || e > 100 || p < 0 || p > 100) { r.className = "res error-msg"; r.innerText = "⚠️ 중간(기말)고사 및 수행평가 점수를 모두 정확하게 입력해 주세요."; return; }
+        const raw = (e * (c.e / 100)) + (p * (c.p / 100)), rnd = Math.round(raw);
+        let g; r.className = "res";
+        if (raw >= 89.5) g = 'A'; else if (raw >= 79.5) g = 'B'; else if (raw >= 69.5) g = 'C'; else if (raw >= 59.5) g = 'D';
+        else if (c.custom) g = 'E';
+        else g = raw >= 49.5 ? 'E' : 'F';
         let txt = `원점수: <strong>${rnd}점</strong> (${raw.toFixed(1)}점) / 등급: <strong>${g}등급</strong><br>`;
         if (rnd === 100) { r.className = "res gold"; txt = `👑 100점 만점으로 A등급 기준을 만족했습니다! 👑<br>원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}`; }
         else if (g === 'A') { r.className = "res green-vip"; txt = `원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}등급<br>🎉 ${aMsg[rnd]} 🎉`; }
         else { r.className = "res red-alert"; txt += g === 'B' ? "조금만 더 노력하면 A등급도 노려볼 수 있어요! 파이팅!" : "이번 학기 고생 많으셨습니다! 다음 학기에도 좋은 결과가 있기를 응원합니다."; }
         r.innerHTML = txt;
     }
-    document.getElementById("sc1").addEventListener("keydown", function(e) { if(e.key === "Enter") cal1(); });
-    document.getElementById("sc2").addEventListener("keydown", function(e) { if(e.key === "Enter") cal2(); });
-    document.getElementById("sc3").addEventListener("keydown", function(e) { if(e.key === "Enter") cal2(); });
+
+    $("sc1").addEventListener("keydown", function(e) { if (e.key === "Enter") cal1(); });
+    $("sc2").addEventListener("keydown", function(e) { if (e.key === "Enter") cal2(); });
+    $("sc3").addEventListener("keydown", function(e) { if (e.key === "Enter") cal2(); });
     up();
 </script>
-<!-- 튜토리얼 팝업 (테스트를 위해 처음에는 무조건 보이도록 display: flex 설정) -->
+
+<!-- 튜토리얼 팝업 -->
 <div id="tutorialModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 9999; font-family: sans-serif;">
-  <div style="background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;">
-    
-    <!-- 타이틀 로고 느낌 안내 -->
+  <div style="background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 380px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;">
+
     <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
     <h3 style="margin: 0 0 8px 0; color: #222; font-size: 20px; font-weight: bold;">성적 계산기</h3>
     <p style="margin: 0 0 20px 0; color: #888; font-size: 13px;">제작 : YHIMS 16기 김아윤, 숭곡중학교 김유찬</p>
-    
-    <!-- 도움말 본문 -->
+
     <div style="background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px;">
       <div style="margin-bottom: 12px;">
         <span style="background: #f0f7ff; color: #1e6091; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">기능 1</span>
-        <strong style="font-size: 14px; color: #333;">A등급 커트라인 계산</strong>
-        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">중간고사/수행평가 점수를 입력하면 A등급 달성에 필요한 최소 기말고사/수행평가 점수를 계산합니다.</p>
+        <strong style="font-size: 14px; color: #333;">목표 등급 커트라인 계산</strong>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">수행평가(또는 중간고사) 점수를 입력하면 목표 등급 달성에 필요한 최소 기말고사(또는 수행평가) 점수를 계산합니다.</p>
       </div>
-      
-      <div>
+
+      <div style="margin-bottom: 12px;">
         <span style="background: #f0f7ff; color: #1e6091; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">기능 2</span>
         <strong style="font-size: 14px; color: #333;">최종 성적 계산</strong>
         <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">지필고사와 수행평가 점수를 조합하여 최종 원점수를 계산합니다.</p>
       </div>
+
+      <div>
+        <span style="background: #fff4e6; color: #b45309; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">모드</span>
+        <strong style="font-size: 14px; color: #333;">직접 입력 / 기존 프리셋</strong>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">직접 입력 모드에서는 지필고사·수행평가 비율과 목표 등급(A~E)을 원하는 대로 설정할 수 있습니다. 한쪽 비율만 입력하면 나머지는 자동으로 채워집니다. 기존 프리셋은 과목별로 미리 정해진 비율이 적용됩니다.</p>
+      </div>
     </div>
-    
-<!-- 지원 학교 표시 바로 아랫줄에 추가 -->
-<p style="margin: 0 0 15px 0; font-size: 12px; color: #777; font-weight: bold;">
-  📢 현재 지원 학교: 영훈국제중학교, 숭곡중학교
-</p>
 
-<!-- 닫기 버튼 -->
-<button id="closeTutorialBtn" style="background: linear-gradient(135deg, #1e6091, #2a9d8f); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: background 0.2s;">
-  확인했습니다
-</button>
+    <p style="margin: 0 0 15px 0; font-size: 12px; color: #777; font-weight: bold;">
+      📢 현재 지원 학교: 영훈국제중학교, 숭곡중학교
+    </p>
 
-<!-- 👇 버튼 밑으로 이동된 안내 문구 -->
-<p style="margin: 10px 0 0 0; font-size: 11px; color: #aaa; font-style: italic;">
-  (재접속 시 다시 확인 가능합니다)
-</p>
+    <button id="closeTutorialBtn" style="background: linear-gradient(135deg, #1e6091, #2a9d8f); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: background 0.2s;">
+      확인했습니다.
+    </button>
 
+    <p style="margin: 10px 0 0 0; font-size: 11px; color: #aaa; font-style: italic;">
+      (재접속 시 다시 확인 가능합니다.)
+    </p>
   </div>
 </div>
 
@@ -175,16 +260,11 @@
 document.addEventListener("DOMContentLoaded", function() {
   const modal = document.getElementById("tutorialModal");
   const btn = document.getElementById("closeTutorialBtn");
-
-  // 버튼을 누르면 팝업창을 닫습니다.
   if (btn && modal) {
-    btn.addEventListener("click", function() {
-      modal.style.display = "none";
-    });
+    btn.addEventListener("click", function() { modal.style.display = "none"; });
   }
 });
 </script>
-  
+
 </body>
 </html>
-
