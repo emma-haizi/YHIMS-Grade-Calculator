@@ -135,15 +135,15 @@
     
     <!-- 타이틀 로고 느낌 안내 -->
     <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
-    <h3 style="margin: 0 0 8px 0; color: #222; font-size: 20px; font-weight: bold;">YHIMS 성적 계산기</h3>
-    <p style="margin: 0 0 20px 0; color: #888; font-size: 13px;">제작 : 16기 김아윤</p>
+    <h3 style="margin: 0 0 8px 0; color: #222; font-size: 20px; font-weight: bold;">Grade Calculator</h3>
+    <p style="margin: 0 0 20px 0; color: #888; font-size: 13px;">제작 : YHIMS 16기 김아윤, 숭곡중학교 김유찬</p>
     
     <!-- 도움말 본문 -->
     <div style="background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px;">
       <div style="margin-bottom: 12px;">
         <span style="background: #e6f2ff; color: #007bff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">기능 1</span>
         <strong style="font-size: 14px; color: #333;">A등급 커트라인 계산</strong>
-        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">중간고사/수행평가 점수를 넣으면 A등급 달성에 필요한 최소 기말고사/수행평가 점수를 미리 알려줍니다.</p>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">중간고사/수행평가 점수를 입력하면 A등급 달성에 필요한 최소 기말고사/수행평가 점수를 계산합니다.</p>
       </div>
       
       <div>
@@ -152,10 +152,15 @@
         <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">지필고사와 수행평가 점수를 조합하여 최종 원점수를 계산합니다.</p>
       </div>
     </div>
-
+    
+<!-- 박스 바로 아래, 닫기 버튼 바로 위에 삽입할 문구 -->
+<p style="margin: 0 0 15px 0; font-size: 12px; color: #777; font-weight: bold;">
+  📢 현재 지원 학교: 영훈국제중학교, 숭곡중학교
+</p>
     <!-- 닫기 버튼 -->
-    <button id="closeTutorialBtn" style="background: #007bff; color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: background 0.2s;">
+    <button id="closeTutorialBtn" style="background: linear-gradient(135deg, #1e6091, #2a9d8f); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; transition: background 0.2s;">
       확인했습니다 (다시 보지 않기)
+  
     </button>
   </div>
 </div>
@@ -165,15 +170,12 @@ document.addEventListener("DOMContentLoaded", function() {
   const modal = document.getElementById("tutorialModal");
   const btn = document.getElementById("closeTutorialBtn");
 
-  // 1. 저장소에서 이전에 방문한 적이 있는지 꺼내봅니다.
   const isVisited = localStorage.getItem("yhims_tutorial_seen");
 
-  // 2. 만약 방문한 적이 있다면 팝업창을 즉시 없앱니다.
   if (isVisited === "true") {
     modal.style.display = "none";
   }
-
-  // 3. 버튼을 누르면 팝업창을 닫고, 저장소에 기록을 남깁니다.
+  
   btn.addEventListener("click", function() {
     modal.style.display = "none";
     localStorage.setItem("yhims_tutorial_seen", "true");
