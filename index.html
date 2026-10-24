@@ -41,10 +41,34 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
         @keyframes glow { 0% { box-shadow: 0 0 5px rgba(46, 204, 113, 0.4); } 100% { box-shadow: 0 0 20px rgba(26, 188, 156, 0.8); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+        /* 왼쪽 상단 메뉴 (학교 계산기 이동) */
+        .menu-btn { right: auto; left: 16px; }
+        .menu { position: absolute; top: 60px; left: 16px; z-index: 10; min-width: 230px; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); padding: 6px; }
+        .menu a { display: block; padding: 12px 14px; border-radius: 8px; color: #334155; text-decoration: none; font-size: 16px; font-weight: bold; }
+        .menu a:hover { background: #f1f5f9; }
+        .menu a.on { background: #b9d9eb; color: #0f2d4a; }
+
+        /* 숭곡중 (초록 테마) */
+        #pageS button { background: #bfe6b3; color: #14401c; }
+        #pageS button:hover { background: #a8d99a; }
+        #pageS .blue-highlight { background: linear-gradient(135deg, #166534, #22a05a); }
+        #pageS .menu a.on { background: #bfe6b3; color: #14401c; }
+        #sgModal { display: flex; position: fixed; inset: 0; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; font-family: sans-serif; }
+        .sgc { background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 380px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
+        .sgg { background: #fdfdfd; border: 1px solid #eaeaea; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px; }
+        .sgi { margin-bottom: 14px; } .sgi:last-child { margin-bottom: 0; }
+        .sgb { background: #f0fdf4; color: #166534; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px; }
+        .sgi strong { font-size: 14px; color: #333; }
+        .sgi p { margin: 4px 0 0; font-size: 12px; color: #666; line-height: 1.5; }
     </style>
 </head>
 <body>
-<div class="box">
+<div class="box" id="pageY">
+    <button id="menuBtn" class="help-btn menu-btn" aria-label="메뉴 열기" aria-expanded="false" title="메뉴">☰</button>
+    <nav id="menu" class="menu hide">
+        <a href="#" data-page="y" class="on">YHIMS Grade Calculator</a>
+        <a href="#" data-page="s">숭곡중 Grade Calculator</a>
+    </nav>
     <button id="helpBtn" class="help-btn" aria-label="사용 방법 보기" title="사용 방법">?</button>
     <div class="title-area">
         <h1>YHIMS Grade Calculator</h1>
@@ -94,6 +118,48 @@
         <label id="lbl3">수행평가 점수 :</label><input type="number" id="sc3" min="0" max="100">
         <button onclick="cal2()">최종 원점수 확인</button>
         <div id="res2" class="res">결과가 여기에 표시됩니다.</div>
+    </div>
+</div>
+
+<div class="box hide" id="pageS">
+    <button id="sgMenuBtn" class="help-btn menu-btn" aria-label="메뉴 열기" aria-expanded="false" title="메뉴">☰</button>
+    <nav class="menu hide">
+        <a href="#" data-page="y">YHIMS Grade Calculator</a>
+        <a href="#" data-page="s" class="on">숭곡중 Grade Calculator</a>
+    </nav>
+    <button id="sgHelp" class="help-btn" aria-label="사용 방법 보기" title="사용 방법">?</button>
+    <div class="title-area">
+        <h1>숭곡중 Grade Calculator</h1>
+        <div class="author">제작 : 숭곡중학교 김유찬</div>
+    </div>
+
+    <div class="select-row">
+        <div><label for="sgGr">학년</label><select id="sgGr"><option value="1">1학년</option><option value="2">2학년</option><option value="3" selected>3학년</option></select></div>
+        <div><label for="sgSem">학기</label><select id="sgSem"><option value="1" selected>1학기</option><option value="2">2학기</option></select></div>
+        <div><label for="sgSub">과목</label><select id="sgSub"></select></div>
+    </div>
+    <label for="sgCut">목표 등급</label>
+    <select id="sgCut">
+        <option value="89.5" selected>A등급 (89.5점 이상)</option>
+        <option value="79.5">B등급 (79.5점 이상)</option>
+        <option value="69.5">C등급 (69.5점 이상)</option>
+        <option value="59.5">D등급 (59.5점 이상)</option>
+    </select>
+
+    <div id="sgInfo" class="info-box"></div>
+    <div id="sgCalc">
+        <div class="section">
+            <h2 id="sgH1">1. 목표 등급 커트라인 계산</h2>
+            <div id="sgIn1"></div>
+            <button id="sgB1">필요한 최소 점수 계산</button>
+            <div id="sgR1" class="res">결과가 여기에 표시됩니다.</div>
+        </div>
+        <div class="section">
+            <h2>2. 최종 성적 계산기</h2>
+            <div id="sgIn2"></div>
+            <button id="sgB2">최종 원점수 확인</button>
+            <div id="sgR2" class="res">결과가 여기에 표시됩니다.</div>
+        </div>
     </div>
 </div>
 
@@ -267,6 +333,149 @@ document.addEventListener("DOMContentLoaded", function() {
     help.addEventListener("click", function() { modal.style.display = "flex"; });
   }
 });
+</script>
+
+<!-- 숭곡중 튜토리얼 팝업 -->
+<div id="sgModal" class="hide">
+  <div class="sgc">
+    <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
+    <h3 style="margin: 0 0 8px 0; color: #222; font-size: 20px; font-weight: bold;">숭곡중 성적 계산기</h3>
+    <p style="margin: 0 0 20px 0; color: #888; font-size: 13px;">제작 : 숭곡중학교 김유찬</p>
+    <div class="sgg">
+      <div class="sgi"><span class="sgb">기본</span><strong>성적 계산기가 뭐예요?</strong>
+        <p>학기 성적은 중간고사·기말고사(지필고사)와 수행평가를 과목마다 정해진 비율로 합쳐서 정해져요. 점수를 넣으면 그 계산을 대신해 줍니다.</p></div>
+      <div class="sgi"><span class="sgb">선택</span><strong>학년 · 학기 · 과목 고르기</strong>
+        <p>고르면 그 과목의 비율과 시험 유형(중간고사만 / 기말고사만 / 둘 다)이 자동으로 적용돼요. 1학년 1학기는 평가가 없어요.</p></div>
+      <div class="sgi"><span class="sgb">기능 1</span><strong>목표 등급 커트라인 계산</strong>
+        <p>이미 받은 점수를 넣으면 목표 등급에 필요한 최소 점수를 알려줘요.<br>· 기말만 보는 과목: 수행평가 → 필요한 기말고사<br>· 둘 다 보는 과목: 중간고사 + 수행평가 → 필요한 기말고사<br>· 중간만 보는 과목: 중간고사 → 필요한 수행평가</p></div>
+      <div class="sgi"><span class="sgb">기능 2</span><strong>최종 성적 계산</strong>
+        <p>과목에 맞는 칸(중간·기말·수행)에 점수를 모두 넣으면 최종 원점수와 등급이 나와요. 등급은 A 89.5 · B 79.5 · C 69.5 · D 59.5점 이상이에요.</p></div>
+    </div>
+    <button id="sgClose" style="background: linear-gradient(135deg, #166534, #4caf50); color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px;">확인했습니다.</button>
+    <p style="margin: 10px 0 0 0; font-size: 11px; color: #aaa; font-style: italic;">(오른쪽 위 ? 버튼으로 다시 볼 수 있어요.)</p>
+  </div>
+</div>
+
+<script>
+// 숭곡중 계산기
+(function () {
+    const $ = id => document.getElementById(id);
+    const C = { m: "중간고사", f: "기말고사", p: "수행평가" };
+    // 과목: [중간 %, 기말 %, 수행 %]  (중간 0 = 기말만, 기말 0 = 중간만)
+    const std = [30, 30, 40], fin = [0, 40, 60], mid5 = [25, 25, 50];
+    const DATA = {
+        1: { 2: { "국어": std, "수학": std, "과학": std, "사회": std, "영어": std } },
+        2: { 1: { "국어": fin, "사회": std, "역사": mid5, "도덕": fin, "과학": std, "영어": fin } },
+        3: { 1: { "국어": fin, "수학": mid5, "역사": mid5, "과학": std, "영어": fin },
+             2: { "국어": fin, "수학": [0, 50, 50], "역사": [0, 50, 50], "과학": [0, 60, 40], "영어": [0, 50, 50] } }
+    };
+    DATA[2][2] = DATA[2][1];
+
+    function conf() {
+        const g = $("sgGr").value, s = $("sgSem").value, sub = $("sgSub").value;
+        const w = (DATA[g][s] || {})[sub];
+        if (!w) return null;
+        const W = { m: w[0], f: w[1], p: w[2] };
+        const keys = ["m", "f", "p"].filter(k => W[k] > 0);
+        const u = W.f > 0 ? "f" : "p";               // 구해야 하는 점수 (기말, 기말이 없으면 수행)
+        const cut = $("sgCut");
+        return { g, s, sub, W, keys, u, known: keys.filter(k => k !== u),
+                 cut: parseFloat(cut.value), gr: cut.options[cut.selectedIndex].text.charAt(0) };
+    }
+
+    function fillSub() {
+        const subs = Object.keys(DATA[$("sgGr").value][$("sgSem").value] || {});
+        $("sgSub").innerHTML = subs.map(x => `<option>${x}</option>`).join("");
+    }
+
+    const inputs = (p, ks) => ks.map(k => `<label for="sg${p}${k}">${C[k]} 점수 :</label><input type="number" id="sg${p}${k}" min="0" max="100" placeholder="${C[k]} 점수를 입력하세요">`).join("");
+
+    function render() {
+        const c = conf();
+        $("sgCalc").classList.toggle("hide", !c);
+        $("sgSub").disabled = !c;
+        if (!c) { $("sgInfo").innerText = `[${$("sgGr").value}학년 ${$("sgSem").value}학기]에는 평가가 없습니다.`; return; }
+        $("sgInfo").innerText = `[${c.g}학년 ${c.s}학기] ${c.sub} 과목은 [${c.keys.map(k => `${C[k]} ${c.W[k]}%`).join(", ")}]로 산출됨 (목표: ${c.gr}등급)`;
+        $("sgH1").innerText = `1. ${c.gr}등급 달성 커트라인 계산`;
+        $("sgIn1").innerHTML = inputs("a", c.known);
+        $("sgIn2").innerHTML = inputs("b", c.keys);
+        $("sgR1").className = "res"; $("sgR1").innerText = "결과가 여기에 표시됩니다.";
+        $("sgR2").className = "res"; $("sgR2").innerText = "결과가 여기에 표시됩니다.";
+    }
+
+    function cal1() {
+        const c = conf(), r = $("sgR1"); if (!c) return;
+        const v = c.known.map(k => parseFloat($("sga" + k).value));
+        if (v.some(x => isNaN(x) || x < 0 || x > 100)) { r.className = "res error-msg"; r.innerText = "⚠️ 0~100 사이의 정확한 점수를 입력해 주세요."; return; }
+        const got = c.known.reduce((a, k, i) => a + v[i] * c.W[k] / 100, 0), tg = C[c.u];
+        const need = (c.cut - got) / (c.W[c.u] / 100);
+        r.className = "res blue-highlight";
+        if (need <= 0) r.innerHTML = `이미 ${c.gr}등급 커트라인을 달성했습니다! (남은 ${tg} 0점 기준)`;
+        else if (need > 100) r.innerHTML = `이 점수로는 ${tg}에서 100점을 획득하여도 ${c.gr}등급 달성이 불가능합니다.`;
+        else r.innerHTML = `🎯 ${c.gr}등급을 받기 위해 필요한 최소 ${tg} 점수는 ${(Math.ceil(need * 10 - 1e-9) / 10).toFixed(1)}점입니다.`;
+    }
+
+    function cal2() {
+        const c = conf(), r = $("sgR2"); if (!c) return;
+        const v = c.keys.map(k => parseFloat($("sgb" + k).value));
+        if (v.some(x => isNaN(x) || x < 0 || x > 100)) { r.className = "res error-msg"; r.innerText = `⚠️ ${c.keys.map(k => C[k]).join(", ")} 점수를 모두 정확하게 입력해 주세요.`; return; }
+        const raw = c.keys.reduce((a, k, i) => a + v[i] * c.W[k] / 100, 0), rnd = Math.round(raw);
+        const g = raw >= 89.5 ? 'A' : raw >= 79.5 ? 'B' : raw >= 69.5 ? 'C' : raw >= 59.5 ? 'D' : raw >= 49.5 ? 'E' : 'F';
+        let txt = `원점수: <strong>${rnd}점</strong> (${raw.toFixed(1)}점) / 등급: <strong>${g}등급</strong><br>`;
+        if (rnd === 100) { r.className = "res gold"; txt = `👑 100점 만점으로 A등급 기준을 만족했습니다! 👑<br>원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}`; }
+        else if (g === 'A') { r.className = "res green-vip"; txt = `원점수: ${rnd}점 (${raw.toFixed(1)}점) / 등급: ${g}등급<br>🎉 ${rnd >= 97 ? "최상위권 성적으로 A등급 기준을 만족했습니다." : rnd >= 93 ? "우수한 성적으로 A등급 기준을 충족했습니다." : "성적 기준을 충족하여 A등급을 획득했습니다."} 🎉`; }
+        else { r.className = "res red-alert"; txt += g === 'B' ? "조금만 더 노력하면 A등급도 노려볼 수 있어요! 파이팅!" : "이번 학기 고생 많으셨습니다! 다음 학기에도 좋은 결과가 있기를 응원합니다."; }
+        r.innerHTML = txt;
+    }
+
+    $("sgB1").onclick = cal1; $("sgB2").onclick = cal2;
+    $("sgCalc").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT") (e.target.id.startsWith("sga") ? cal1 : cal2)(); });
+    // 칸이 모두 채워져 있으면 입력하는 즉시 다시 계산
+    $("sgCalc").addEventListener("input", e => {
+        const a = e.target.id.startsWith("sga");
+        if ([...$(a ? "sgIn1" : "sgIn2").querySelectorAll("input")].every(i => i.value !== "")) (a ? cal1 : cal2)();
+    });
+    ["sgGr", "sgSem"].forEach(id => $(id).addEventListener("change", () => { fillSub(); render(); }));
+    ["sgSub", "sgCut"].forEach(id => $(id).addEventListener("change", render));
+
+    const modal = $("sgModal");
+    $("sgHelp").addEventListener("click", () => modal.classList.remove("hide"));
+    $("sgClose").addEventListener("click", () => modal.classList.add("hide"));
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hide"); });
+
+    fillSub(); render();
+})();
+</script>
+
+<script>
+// 왼쪽 상단 메뉴: 한 파일 안에서 YHIMS ↔ 숭곡중 전환
+(function () {
+    const pages = { y: document.getElementById("pageY"), s: document.getElementById("pageS") };
+    const yModal = document.getElementById("tutorialModal");
+    let sgFirst = true;
+    function closeMenus() {
+        document.querySelectorAll(".menu").forEach(m => m.classList.add("hide"));
+        document.querySelectorAll(".menu-btn").forEach(b => b.setAttribute("aria-expanded", "false"));
+    }
+    function show(p) {
+        for (const k in pages) pages[k].classList.toggle("hide", k !== p);
+        yModal.classList.toggle("hide", p !== "y");   // YHIMS 튜토리얼은 YHIMS 화면에서만
+        document.title = (p === "s" ? "숭곡중" : "YHIMS") + " Grade Calculator";
+        try { history.replaceState(null, "", p === "s" ? "#s" : "#y"); } catch (e) {}
+        closeMenus();
+        if (p === "s" && sgFirst) { sgFirst = false; document.getElementById("sgHelp").click(); }
+    }
+    document.querySelectorAll(".menu-btn").forEach(b => b.addEventListener("click", e => {
+        e.stopPropagation();
+        const m = b.nextElementSibling, wasHidden = m.classList.contains("hide");
+        closeMenus();
+        if (wasHidden) { m.classList.remove("hide"); b.setAttribute("aria-expanded", "true"); }
+    }));
+    document.querySelectorAll(".menu a").forEach(a => a.addEventListener("click", e => { e.preventDefault(); show(a.dataset.page); }));
+    document.addEventListener("click", closeMenus);
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeMenus(); });
+    show(location.hash === "#s" ? "s" : "y");
+})();
 </script>
 
 </body>
