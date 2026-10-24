@@ -59,11 +59,6 @@
 
     <!-- 직접 입력 모드 -->
     <div id="customBox">
-        <label for="ct">시험 종류</label>
-        <select id="ct" onchange="up()">
-            <option value="중간">중간고사</option>
-            <option value="기말" selected>기말고사</option>
-        </select>
         <div class="select-row">
             <div><label for="ce">지필고사 비율 (%)</label><input type="number" id="ce" min="0" max="100" value="30" oninput="syncR('ce')"></div>
             <div><label for="cp">수행평가 비율 (%)</label><input type="number" id="cp" min="0" max="100" value="70" oninput="syncR('cp')"></div>
@@ -74,7 +69,6 @@
             <option value="79.5">B등급 (79.5점 이상)</option>
             <option value="69.5">C등급 (69.5점 이상)</option>
             <option value="59.5">D등급 (59.5점 이상)</option>
-            <option value="0">E등급 (59.5점 미만)</option>
         </select>
     </div>
 
@@ -142,7 +136,7 @@
     function getConf() {
         if (mode === "custom") {
             const g = $("cg"), opt = g.options[g.selectedIndex];
-            return { t: $("ct").value, e: parseFloat($("ce").value), p: parseFloat($("cp").value),
+            return { t: "기말", e: parseFloat($("ce").value), p: parseFloat($("cp").value),
                      n: "직접 입력", known: "perf", cut: parseFloat(g.value), gr: opt.text.charAt(0), custom: true };
         }
         const s = $("sem").value, k = $("sub").value;
@@ -191,13 +185,13 @@
         const need = (c.cut - v * (known / 100)) / (unknown / 100);
         if (need <= 0) r.innerHTML = `이미 ${c.gr}등급 커트라인을 달성했습니다! (남은 시험 0점 기준)`;
         else if (need > 100) r.innerHTML = `이 점수로는 ${target}에서 100점을 획득하여도 ${c.gr}등급 달성이 불가능합니다.`;
-        else r.innerHTML = `🎯 ${c.gr}등급을 받기 위해 필요한 최소 ${target} 점수는 ${need.toFixed(1)}점입니다.`;
+        else r.innerHTML = `🎯 ${c.gr}등급을 받기 위해 필요한 최소 ${target} 점수는 ${(Math.ceil(need * 10 - 1e-9) / 10).toFixed(1)}점입니다.`;
     }
 
     function cal2() {
         const c = getConf(), e = parseFloat($("sc2").value), p = parseFloat($("sc3").value), r = $("res2");
         if (!ratioOk(c)) { r.className = "res error-msg"; r.innerText = "⚠️ 지필고사와 수행평가 비율을 먼저 입력해 주세요. (합계 100%)"; return; }
-        if (isNaN(e) || isNaN(p) || e < 0 || e > 100 || p < 0 || p > 100) { r.className = "res error-msg"; r.innerText = "⚠️ 중간(기말)고사 및 수행평가 점수를 모두 정확하게 입력해 주세요."; return; }
+        if (isNaN(e) || isNaN(p) || e < 0 || e > 100 || p < 0 || p > 100) { r.className = "res error-msg"; r.innerText = `⚠️ ${c.t}고사 및 수행평가 점수를 모두 정확하게 입력해 주세요.`; return; }
         const raw = (e * (c.e / 100)) + (p * (c.p / 100)), rnd = Math.round(raw);
         let g; r.className = "res";
         if (raw >= 89.5) g = 'A'; else if (raw >= 79.5) g = 'B'; else if (raw >= 69.5) g = 'C'; else if (raw >= 59.5) g = 'D';
@@ -240,7 +234,7 @@
       <div>
         <span style="background: #fff4e6; color: #b45309; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 5px;">모드</span>
         <strong style="font-size: 14px; color: #333;">직접 입력 / 2026학년도 3학년 프리셋</strong>
-        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">직접 입력 모드에서는 지필고사·수행평가 비율과 목표 등급(A~E)을 원하는 대로 설정할 수 있습니다. 한쪽 비율만 입력하면 나머지는 자동으로 채워집니다. 2026학년도 3학년 프리셋은 해당 학년도 기준 과목별 비율이 적용됩니다.</p>
+        <p style="margin: 4px 0 0 0; font-size: 12px; color: #666; line-height: 1.4;">직접 입력 모드에서는 지필고사·수행평가 비율과 목표 등급(A~D)을 원하는 대로 설정할 수 있습니다. 한쪽 비율만 입력하면 나머지는 자동으로 채워집니다. 2026학년도 3학년 프리셋은 해당 학년도 기준 과목별 비율이 적용됩니다.</p>
       </div>
     </div>
 
