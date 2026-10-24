@@ -129,5 +129,43 @@
     document.getElementById("sc3").addEventListener("keydown", function(e) { if(e.key === "Enter") cal2(); });
     up();
 </script>
+  <!-- 튜토리얼 팝업 (웹/앱 공용) -->
+<div id="tutorialModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 9999;">
+  <div style="background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-family: sans-serif;">
+    <h3 style="margin-top: 0; color: #333;">👋 YHIMS 성적 계산기 도움말</h3>
+    <p style="font-size: 14px; color: #666; line-height: 1.5;">앱을 처음 켜신 분들을 위한 간단한 가이드입니다.</p>
+    
+    <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; font-size: 13px; text-align: left; margin: 15px 0;">
+      <p style="margin: 5px 0;"><strong>1. 커트라인 계산:</strong> 중간고사 점수를 입력하면, A등급을 받기 위해 필요한 기말고사 최소 점수를 계산합니다.</p>
+      <p style="margin: 10px 0 5px 0;"><strong>2. 최종 성적 확인:</strong> 수행평가와 시험 점수를 모두 반영한 최종 원점수를 미리 예측합니다.</p>
+    </div>
+
+    <button id="closeTutorialBtn" style="background: #007bff; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
+      확인 (다시 보지 않기)
+    </button>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const modal = document.getElementById("tutorialModal");
+  const btn = document.getElementById("closeTutorialBtn");
+
+  // LocalStorage에서 방문 기록 확인
+  const isVisited = localStorage.getItem("yhims_first_launch");
+
+  // 첫 방문일 때만 팝업 표시
+  if (!isVisited) {
+    modal.style.display = "flex";
+  }
+
+  // 버튼 클릭 시 팝업을 닫고 방문 기록 저장
+  btn.addEventListener("click", function() {
+    modal.style.display = "none";
+    localStorage.setItem("yhims_first_launch", "true");
+  });
+});
+</script>
+
 </body>
 </html>
