@@ -48,7 +48,6 @@
         .menu a:hover { background: #f1f5f9; }
         .menu a.on { background: #b9d9eb; color: #0f2d4a; }
 
-        /* 숭곡중 (초록 테마) */
         #pageS button { background: #bfe6b3; color: #14401c; }
         #pageS button:hover { background: #a8d99a; }
         #pageS .blue-highlight { background: linear-gradient(135deg, #166534, #22a05a); }
@@ -75,13 +74,11 @@
         <div class="author">제작 : YHIMS 16기 김아윤</div>
     </div>
 
-    <!-- 모드 선택 -->
     <div class="tabs">
         <button id="tabCustom" class="on" onclick="setMode('custom')">직접 입력</button>
         <button id="tabPreset" onclick="setMode('preset')">2026학년도 3학년</button>
     </div>
 
-    <!-- 직접 입력 모드 -->
     <div id="customBox">
         <div class="select-row">
             <div><label for="ce">지필고사 비율 (%)</label><input type="number" id="ce" min="0" max="100" value="30" oninput="syncR('ce')"></div>
@@ -96,7 +93,6 @@
         </select>
     </div>
 
-    <!-- 3학년 프리셋 모드 -->
     <div id="presetBox" class="select-row hide">
         <select id="sem" onchange="up()"><option value="1">1학기</option><option value="2">2학기</option></select>
         <select id="sub" onchange="up()">
@@ -189,7 +185,6 @@
         up();
     }
 
-    // 한쪽 비율을 입력하면 나머지가 자동으로 채워짐
     function syncR(from) {
         const v = parseFloat($(from).value);
         const other = from === "ce" ? "cp" : "ce";
@@ -198,7 +193,6 @@
         up(true);
     }
 
-    // known: 이미 알고 있는 점수 종류 ("exam" = 지필, "perf" = 수행평가)
     function getConf() {
         if (mode === "custom") {
             const g = $("cg"), opt = g.options[g.selectedIndex];
@@ -276,7 +270,6 @@
     up();
 </script>
 
-<!-- 튜토리얼 팝업 -->
 <div id="tutorialModal" style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; z-index: 9999; font-family: sans-serif;">
   <div style="background: white; padding: 25px; border-radius: 16px; width: 85%; max-width: 380px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;">
 
@@ -325,17 +318,17 @@ document.addEventListener("DOMContentLoaded", function() {
   const help = document.getElementById("helpBtn");
   if (btn && modal) {
     btn.addEventListener("click", function() { modal.style.display = "none"; });
-    // 팝업 바깥의 어두운 영역을 눌러도 닫힘
+
     modal.addEventListener("click", function(e) { if (e.target === modal) modal.style.display = "none"; });
   }
-  // 오른쪽 위 ? 버튼으로 튜토리얼 다시 열기
+
   if (help && modal) {
     help.addEventListener("click", function() { modal.style.display = "flex"; });
   }
 });
 </script>
 
-<!-- 숭곡중 튜토리얼 팝업 -->
+
 <div id="sgModal" class="hide">
   <div class="sgc">
     <div style="font-size: 40px; margin-bottom: 10px;">📊</div>
@@ -357,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </div>
 
 <script>
-// 숭곡중 계산기
+
 (function () {
     const $ = id => document.getElementById(id);
     const C = { m: "중간고사", f: "기말고사", p: "수행평가" };
@@ -430,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     $("sgB1").onclick = cal1; $("sgB2").onclick = cal2;
     $("sgCalc").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT") (e.target.id.startsWith("sga") ? cal1 : cal2)(); });
-    // 칸이 모두 채워져 있으면 입력하는 즉시 다시 계산
+
     $("sgCalc").addEventListener("input", e => {
         const a = e.target.id.startsWith("sga");
         if ([...$(a ? "sgIn1" : "sgIn2").querySelectorAll("input")].every(i => i.value !== "")) (a ? cal1 : cal2)();
@@ -448,7 +441,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <script>
-// 왼쪽 상단 메뉴: 한 파일 안에서 YHIMS ↔ 숭곡중 전환
+
 (function () {
     const pages = { y: document.getElementById("pageY"), s: document.getElementById("pageS") };
     const yModal = document.getElementById("tutorialModal");
